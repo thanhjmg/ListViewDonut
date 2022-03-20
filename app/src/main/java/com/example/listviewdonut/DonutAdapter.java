@@ -1,14 +1,15 @@
 package com.example.listviewdonut;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -16,25 +17,23 @@ import java.util.List;
 
 public class DonutAdapter extends BaseAdapter {
 
-     Context ctx;
-     int idLayout;
-     List<Donut> listDonut;
+    private Context context;
+    private int idLayout;
+    private List<Donut> listDonuts;
+    private int indexSelected = -1;
 
-    private int positionSelect = -1;
-
-    public DonutAdapter(Context ctx, int idLayout, List<Donut> listDonut) {
-        this.ctx = ctx;
+    public DonutAdapter(Context context, int idLayout, List<Donut> listDonuts) {
+        this.context = context;
         this.idLayout = idLayout;
-        this.listDonut = listDonut;
+        this.listDonuts = listDonuts;
     }
 
     @Override
     public int getCount() {
-        if (listDonut.size() != 0 && !listDonut.isEmpty()) {
-            return listDonut.size();
+        if(listDonuts.size() != 0 && !listDonuts.isEmpty()) {
+            return listDonuts.size();
         }
         return 0;
-
     }
 
     @Override
@@ -48,54 +47,40 @@ public class DonutAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = LayoutInflater.from(ctx).inflate(idLayout, viewGroup, false);
+    public View getView(int index, View convertView, ViewGroup parent) {
+        if(convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(idLayout, parent, false);
         }
-        TextView tvName = view.findViewById(R.id.tvName);
-        TextView tvCT = view.findViewById(R.id.tvCT);
-        TextView tvprice = view.findViewById(R.id.tvprice);
-        ImageView imgDonut = view.findViewById(R.id.imgDonut);
 
-        final ConstraintLayout layoutDonutItem =  view.findViewById(R.id.layoutDonutItem);
+        ImageView imgView = convertView.findViewById(R.id.imgView);
+        TextView tvNameDonut = convertView.findViewById(R.id.tvNameDonut);
+        TextView tvDescDonut = convertView.findViewById(R.id.tvDescDonut);
+        TextView tvPrice = convertView.findViewById(R.id.tvPriceDonut);
+        ImageButton btnAdd = convertView.findViewById(R.id.imageButton);
+        ConstraintLayout constraintLayout = convertView.findViewById(R.id.itemConStraintLayout);
+        Donut donut = listDonuts.get(index);
 
-        final Donut donut = listDonut.get(i);
-        if (listDonut != null && !listDonut.isEmpty()) {
-            tvName.setText(donut.getName());
-            tvCT.setText(donut.getChuthich());
-            tvprice.setText(donut.getPrice());
-            int idDonut = donut.getImageDonut();
-            switch (idDonut) {
-                case 1:
-                    imgDonut.setImageResource(R.drawable.donut_a);
-                    break;
-                case 2:
-                    imgDonut.setImageResource(R.drawable.donut_b);
-                    break;
-                case 3:
-                    imgDonut.setImageResource(R.drawable.donut_c);
-                    break;
-                case 4:
-                    imgDonut.setImageResource(R.drawable.donut_d);
-                default:
-                    break;
-            }
+        if(listDonuts != null && !listDonuts.isEmpty()) {
+            tvNameDonut.setText(donut.getName());
+            tvDescDonut.setText(donut.getDesc());
+            tvPrice.setText(donut.getFormatPrice());
+            imgView.setImageResource(listDonuts.get(index).getImage());
         }
-        view.setOnClickListener(new View.OnClickListener() {
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ctx, donut.getName(), Toast.LENGTH_LONG).show();
-                positionSelect = i;
-                notifyDataSetChanged();
+                Intent in = new Intent(context, DeTailDonutActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("image", donut.getImage());
+                bundle.putString("name", donut.getName());
+                bundle.putString("price", donut.getFormatPrice());
+
+                in.putExtras(bundle);
+                context.startActivity(in);
             }
         });
-        if(positionSelect ==i){
-            layoutDonutItem.setBackgroundColor(Color.BLUE);
-        }else {
-            layoutDonutItem.setBackgroundColor(Color.WHITE);
-        }
-        return view;
+
+        return convertView;
     }
-
-
 }

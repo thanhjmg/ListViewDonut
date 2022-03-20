@@ -1,25 +1,35 @@
 package com.example.listviewdonut;
 
+import java.text.DecimalFormat;
+
 public class Donut {
-    private int imageDonut;
+    private int id;
     private String name;
-    private String chuthich;
-    private String price;
+    private String desc;
+    private double price;
+    private int image;
 
-
-    public Donut(int imageDonut, String name, String chuthich, String price) {
-        this.imageDonut = imageDonut;
+    public Donut(int id, String name, String desc, double price, int image) {
+        this.id = id;
         this.name = name;
-        this.chuthich = chuthich;
+        this.desc = desc;
+        this.price = price;
+        this.image = image;
+    }
+
+    public Donut(int id, String name, String desc, double price) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
         this.price = price;
     }
 
-    public int getImageDonut() {
-        return imageDonut;
+    public int getId() {
+        return id;
     }
 
-    public void setImageDonut(int imageDonut) {
-        this.imageDonut = imageDonut;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -30,19 +40,32 @@ public class Donut {
         this.name = name;
     }
 
-    public String getChuthich() {
-        return chuthich;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setChuthich(String chuthich) {
-        this.chuthich = chuthich;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
+    public String getFormatPrice() {
+        DecimalFormat df = new DecimalFormat("$ #,###.00");
+        return df.format(this.getPrice());
     }
 }
